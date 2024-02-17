@@ -8,7 +8,7 @@ setup(
     description="A CLI interface for interacting with Portal das Finanças automatically and programmatically",
     keywords="Portal_Das_Finanças CLI Python Typer Selenium Automation",
     url="https://github.com/JoaoGuedes01/scraper_portal_financas",
-    version='0.1.0',
+    version=open('.bumpversion.cfg').readlines()[1].split('=')[1].strip(),  # Reads version from .bumpversion.cfg
     packages=find_packages(),
     entry_points={
         'console_scripts': [
