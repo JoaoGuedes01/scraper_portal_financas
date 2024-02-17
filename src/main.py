@@ -23,8 +23,8 @@ def checkfiscal(
 ): 
     controllers.checkFiscalSituation(user_nif, user_pass, headless)
 
-@app.command(name="version", help="Will check the state of the current fiscal situation")
-def getversion(): print(__version__)
+@app.command(name="version", help="Returns GuedesMoney version")
+def getversion(): print(f'GuedesMoney is running version {__version__}')
 
 def main():
     app()
