@@ -1,12 +1,10 @@
 from setuptools import setup, find_packages
-
+from pathlib import Path
 import codecs
 import os
 
-here = os.path.abspath(os.path.dirname(__file__))
-
-with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
-    long_description = "\\n" + fh.read()
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='guedesmoney',
@@ -15,6 +13,7 @@ setup(
     description="A CLI interface for interacting with Portal das Finanças automatically and programmatically",
     keywords="Portal_Das_Finanças CLI Python Typer Selenium Automation",
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url="https://github.com/JoaoGuedes01/scraper_portal_financas",
     version=open('.bumpversion.cfg').readlines()[1].split('=')[1].strip(),  # Reads version from .bumpversion.cfg
     packages=find_packages(),
