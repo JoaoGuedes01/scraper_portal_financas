@@ -90,7 +90,7 @@ def CheckAlerts(driver):
     return {"alerts": alert_rows_obj}
 
 def CheckMessages(driver):
-    # Clicking on Consultar Mensagens
+    # Clicking on Consult Messages Menu Button
     driver.find_element(By.XPATH,'//*[@id="collapseMenu18"]/ul/li[5]').click()
     wait_until_element_is_present(driver, By.ID, 'mensagens-table', 10)
     
@@ -137,10 +137,14 @@ def CheckInteractions(driver):
     
     return {"interactions": all_interactions}
 
-def CheckPayments(driver, payment_type):
+def NavigateToPagamentos(driver):
+    print('Navigating to Payments')
+
     # Clicking on Pagamentos
     driver.find_element(By.XPATH,'//*[@id="collapseMenu18"]/ul/li[2]').click()
     wait_until_element_is_present(driver, By.ID, 'main-content', 10)
+
+def CheckPayments(driver, payment_type):
     
     if payment_type == 'current':
         payment_iteration = 1
@@ -259,6 +263,7 @@ def CreateDriver(headless):
     if headless:
         options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
+    driver.set_window_size(1920,1080)
     return driver
 
 def ConfigCLI(user_nif, user_password):
