@@ -25,10 +25,17 @@ def checkfiscal(
 def getversion(): print(f'GuedesMoney is running version {__version__}')
 
 @app.command(name="config", help="Will prompt user to setup the CLI configuration")
-def Config():
-    user_nif = typer.prompt("Please enter your NIF")
-    user_password = typer.prompt("Please enter your Password", hide_input=True)
-    controllers.CLIConfig(user_nif, user_password)
+def Config(
+    check_config: bool = typer.Option(False, "--check_config", "-c", help="Checks CLI configuration instead of configuring it"),
+    show_password: bool = typer.Option(False, "--show_password", "-sp", help="Show password in CLI configuration"),
+):
+    
+    if check_config:
+        controllers.CheckConfig(show_password)
+    else:
+        user_nif = typer.prompt("Please enter your NIF")
+        user_password = typer.prompt("Please enter your Password", hide_input=True)
+        controllers.CLIConfig(user_nif, user_password)
 
 def main():
     app()
