@@ -1,4 +1,4 @@
-import utils
+from . import utils
 
 def CLIConfig(user_nif, user_password):
     utils.ConfigCLI(user_nif, user_password)
