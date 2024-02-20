@@ -3,6 +3,9 @@ import utils
 def CLIConfig(user_nif, user_password):
     utils.ConfigCLI(user_nif, user_password)
 
+def CheckConfig(show_password):
+    utils.CheckConfig(show_password)
+
 def CheckLogin(headless):
     driver = utils.CreateDriver(headless)
     utils.LoginWithCredentials(driver)

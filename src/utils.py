@@ -268,3 +268,16 @@ def ConfigCLI(user_nif, user_password):
         print("CLI successfully configured")
     except:
         print("There was an error while configuring thje CLI")
+
+def CheckConfig(show_password):
+    try:
+        with open(f'{home_dir}\\config.json', 'r') as f:
+            data = json.load(f)
+        nif = data['user_nif']
+        password = data['user_password']
+        
+        print(f'User NIF: {nif}')
+        if show_password:
+            print(f'User Password: {password}')
+    except:
+        print("There was an error while configuring thje CLI")
