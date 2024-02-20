@@ -42,3 +42,76 @@ def checkAlerts(headless, screenshot, save_file):
     if save_file:
         utils.SaveObjectToFile(current_alerts, 'current_alerts')
     driver.quit()
+
+def checkMessages(headless, screenshot, save_file):
+    # Creating driver
+    driver = utils.CreateDriver(headless)
+    utils.LoginWithCredentials(driver)
+    # Login with config credentials
+    utils.NavigateToMyArea(driver)
+    # Check the messages
+    current_messages = utils.CheckMessages(driver)
+
+    # Take and save screenshot
+    if screenshot:
+        current_messages = utils.ScreenShotRoutine(driver, 'current-messages', current_messages)
+    # Save results
+    if save_file:
+        utils.SaveObjectToFile(current_messages, 'current_messages')
+    driver.quit()
+
+def checkInteractions(headless, screenshot, save_file):
+    # Creating driver
+    driver = utils.CreateDriver(headless)
+    utils.LoginWithCredentials(driver)
+    # Login with config credentials
+    utils.NavigateToMyArea(driver)
+    # Check the messages
+    current_interactions = utils.CheckInteractions(driver)
+
+    # Take and save screenshot
+    if screenshot:
+        current_messages = utils.ScreenShotRoutine(driver, 'current-interactions', current_interactions)
+    # Save results
+    if save_file:
+        utils.SaveObjectToFile(current_interactions, 'current_interactions')
+    driver.quit()
+
+def checkPayments(headless, screenshot, save_file, current_payments, missing_payments, refund_payments):
+    if not current_payments and not missing_payments and not refund_payments:
+        print("Please select a payments option to check (--help for more )")
+        return
+     # Creating driver
+    driver = utils.CreateDriver(headless)
+    utils.LoginWithCredentials(driver)
+    # Login with config credentials
+    utils.NavigateToMyArea(driver)
+    utils.NavigateToPagamentos(driver)
+    payments = {}
+    if current_payments:
+        current_payments = utils.CheckPayments(driver, 'current')
+
+        if screenshot:
+            current_payments = utils.ScreenShotRoutine(driver, 'current_payments', current_payments)
+
+        payments["current_payments"] = current_payments
+
+    if missing_payments:
+        missing_payments = utils.CheckPayments(driver, 'missing')
+
+        if screenshot:
+            missing_payments = utils.ScreenShotRoutine(driver, 'missing_payments', missing_payments)
+
+        payments["missing_payments"] = missing_payments
+    if refund_payments:
+        refund_payments = utils.CheckPayments(driver, 'refund')
+
+        if screenshot:
+            refund_payments = utils.ScreenShotRoutine(driver, 'refund_payments', refund_payments)
+        
+        payments["refund_payments"] = refund_payments
+
+    # Save results
+    if save_file:
+        utils.SaveObjectToFile(payments, 'payments')
+    driver.quit()
