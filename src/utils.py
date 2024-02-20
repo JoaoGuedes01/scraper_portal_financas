@@ -27,7 +27,7 @@ def LoginWithCredentials(driver):
 
     nif = data['user_nif']
     password = data['user_password']
-    print(f'Loggin in NIF: {nif}')
+    print(f'Logging in NIF: {nif}')
 
     driver.get(financas_login_page)
     wait_until_element_is_present(driver,By.LINK_TEXT,"Autoridade Tributária e Aduaneira", 10)
@@ -289,4 +289,4 @@ def CheckConfig(show_password):
         if show_password:
             print(f'User Password: {password}')
     except:
-        print("There was an error while configuring thje CLI")
+        print("CLI is not configured properly")
