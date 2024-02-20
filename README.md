@@ -10,7 +10,7 @@ pip install guedesmoney
 ```
 or
 ```
-pip install guedesmoney==<any_version> (for instance 0.1.0)
+pip install guedesmoney==<any_version> (for instance 1.0.1)
 ```
 ## Usage
 Like any other CLI tool guedesmoney keeps it simple by asking for a command action and arguments in this order
@@ -20,15 +20,35 @@ guedesmoney <command> <args> <option>
 ## Documentation
 | Command | Arguments | Description |
 | -------- | -------- | -------- |
-|login|nif;password;opt|Will check if login credentials are correct|
-|check-fiscal|nif;password;opt|Will check the state of the current fiscal situation|
+|check-alerts|headless, save_results, screenshot|Will check the current alerts|
+|check-fiscal|headless, save_results, screenshot|Will check the state of the current fiscal situation|
+|check-interactions|headless, save_results, screenshot|Will check the current interactions|
+|check-messages|headless, save_results, screenshot|Will check the current messages|
+|check-payments|headless, save_results, screenshot, current, missing, refund|Will check state of the current payments|
+|config|check_config, show_password|Will prompt user to setup the CLI configuration|
+|login|headless|Will check if login credentials are correct|
+|run|headless, save_results, screenshot,check-fiscal,check-alerts, check-messages, check-interactions, check-payments ,current, missing, refund|Can run all commands in GuedesMoney (recommended for pipeline integration)|
 |version|*none*|Returns the current version of guedesmoney|
 
-| Argument | Type | Description |
-| -------- | -------- | -------- |
-|nif|string|user's nif (Fiscal Identification Number)|
-|password|string|user's password|
-|headless|boolean|Run scraper in headless mode|
+| Argument |small | Type | Description |
+| -------- | -------- | -------- | -------- |
+|headless|hl|boolean|Run scraper in headless mode|
+|save_results|sr|boolean|Save results to file|
+|screenshot|ss|boolean|Save a screenshot of the of window|
+|check-fiscal|cf|boolean|Run Check Fiscal Command|
+|check-alerts|ca|boolean|Run Check Alerts Command|
+|check-messages|cm|boolean|Run Check Messages Command|
+|check-interactions|ci|boolean|Run Check Interactions Command|
+|check-payments|cp|boolean|Run Check Payments Command|
+|current|c|boolean|Check the state of the current payments|
+|missing|m|boolean|Check the state of the missing payments|
+|refund|r|boolean|Check the state of the refund payments|
+
+## Example
+The following example will run every command and verify every check in guedesmoney through the command run:
+```
+guedesmoney run --headless --save_results --screenshot --check-fiscal --check-alerts --check-messages --check-interactions --check-payments --current --missing --refund
+```
 
 ## Tools
 - Typer
