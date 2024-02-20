@@ -1,7 +1,6 @@
-#!/usr/bin/env python
 import typer
 from pkg_resources import get_distribution
-import controllers
+from . import controllers
 
 app = typer.Typer(add_completion=False)
 
