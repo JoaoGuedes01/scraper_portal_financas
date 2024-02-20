@@ -1,14 +1,24 @@
-import src.utils as utils
+import utils
 
-def CheckLogin(user_nif, user_pass, headless):
+def CLIConfig(user_nif, user_password):
+    utils.ConfigCLI(user_nif, user_password)
+
+def CheckLogin(headless):
     driver = utils.CreateDriver(headless)
-    utils.LoginWithCredentials(driver, user_nif, user_pass)
+    utils.LoginWithCredentials(driver)
     driver.quit()
 
-def checkFiscalSituation(user_nif, user_pass, headless):
+def checkFiscalSituation(headless, screenshot, save_file):
+
     driver = utils.CreateDriver(headless)
-    utils.LoginWithCredentials(driver, user_nif, user_pass)
+    utils.LoginWithCredentials(driver)
     utils.NavigateToMyArea(driver)
-    utils.CheckFiscalSituationText(driver)
-    driver.get_screenshot_as_file("screenshot.png")
+    fiscal_situation = utils.CheckFiscalSituationText(driver)
+
+    if screenshot:
+        fiscal_situation = utils.ScreenShotRoutine(driver, 'fiscal-situation', fiscal_situation)
+
+    if save_file:
+        utils.SaveObjectToFile(fiscal_situation, 'fiscal_situation')
+        
     driver.quit()
