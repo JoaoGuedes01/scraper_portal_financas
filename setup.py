@@ -16,7 +16,8 @@ setup(
     long_description_content_type='text/markdown',
     url="https://github.com/JoaoGuedes01/scraper_portal_financas",
     version=open('.bumpversion.cfg').readlines()[1].split('=')[1].strip(),  # Reads version from .bumpversion.cfg
-    packages=find_packages(),
+    packages=["src"],
+    install_requires=["setuptools", "selenium", "typer"],
     entry_points={
         'console_scripts': [
             'guedesmoney=src.main:main'
