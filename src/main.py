@@ -36,14 +36,14 @@ def checkMessages(
 ): controllers.checkMessages(headless, screenshot, save_file)
 
 @app.command(name="check-interactions", help="Will check the current interactions")
-def checkMessages(
+def checkInteractions(
     headless: bool = typer.Option(False, "--headless", "-hl", help="Run in headless mode"),
     save_file: bool = typer.Option(False, "--save_results", "-sr" , help="Save results to file"),
     screenshot: bool = typer.Option(False, "--screenshot", "-ss" ,  help="Save a screenshot of the of window"),
 ): controllers.checkInteractions(headless, screenshot, save_file)
 
 @app.command(name="check-payments", help="Will check state of the current payments")
-def checkMessages(
+def checkPayments(
     headless: bool = typer.Option(False, "--headless", "-hl", help="Run in headless mode"),
     save_file: bool = typer.Option(False, "--save_results", "-sr" , help="Save results to file"),
     screenshot: bool = typer.Option(False, "--screenshot", "-ss" ,  help="Save a screenshot of the of window"),
@@ -51,6 +51,21 @@ def checkMessages(
     missing_payments: bool = typer.Option(False, "--missing", "-m" ,  help="Check the state of the missing payments"),
     refund_payments: bool = typer.Option(False, "--refund", "-r" ,  help="Check the state of the refund payments")
 ): controllers.checkPayments(headless, screenshot, save_file, current_payments, missing_payments, refund_payments)
+
+@app.command(name="run", help="Can run all commands in GuedesMoney (recommended for pipeline integration)")
+def RunGeneral(
+    headless: bool = typer.Option(False, "--headless", "-hl", help="Run in headless mode"),
+    save_file: bool = typer.Option(False, "--save_results", "-sr" , help="Save results to file"),
+    screenshot: bool = typer.Option(False, "--screenshot", "-ss" ,  help="Save a screenshot of the of window"),
+    check_fiscal: bool = typer.Option(False, "--check-fiscal", "-cf" ,  help="Run Check Fiscal Command"),
+    check_alerts: bool = typer.Option(False, "--check-alerts", "-ca" ,  help="Run Check Alerts Command"),
+    check_messages: bool = typer.Option(False, "--check-messages", "-cm" ,  help="Run Check Messages Command"),
+    check_interactions: bool = typer.Option(False, "--check-interactions", "-ci" ,  help="Run Check Interactions Command"),
+    check_payments: bool = typer.Option(False, "--check-payments", "-cp" ,  help="Run Check Payments Command"),
+    current_payments: bool = typer.Option(False, "--current", "-c" ,  help="Check the state of the current payments"),
+    missing_payments: bool = typer.Option(False, "--missing", "-m" ,  help="Check the state of the missing payments"),
+    refund_payments: bool = typer.Option(False, "--refund", "-r" ,  help="Check the state of the refund payments")
+): controllers.RunGeneral(headless, screenshot, save_file, check_fiscal,check_alerts, check_messages, check_interactions, check_payments, current_payments, missing_payments, refund_payments)
 
 @app.command(name="version", help="Returns GuedesMoney version")
 def getversion(): print(f'GuedesMoney is running version {__version__}')
