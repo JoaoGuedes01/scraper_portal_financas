@@ -28,6 +28,30 @@ def checkAlerts(
     screenshot: bool = typer.Option(False, "--screenshot", "-ss" ,  help="Save a screenshot of the of window"),
 ): controllers.checkAlerts(headless, screenshot, save_file)
 
+@app.command(name="check-messages", help="Will check the current messages")
+def checkMessages(
+    headless: bool = typer.Option(False, "--headless", "-hl", help="Run in headless mode"),
+    save_file: bool = typer.Option(False, "--save_results", "-sr" , help="Save results to file"),
+    screenshot: bool = typer.Option(False, "--screenshot", "-ss" ,  help="Save a screenshot of the of window"),
+): controllers.checkMessages(headless, screenshot, save_file)
+
+@app.command(name="check-interactions", help="Will check the current interactions")
+def checkMessages(
+    headless: bool = typer.Option(False, "--headless", "-hl", help="Run in headless mode"),
+    save_file: bool = typer.Option(False, "--save_results", "-sr" , help="Save results to file"),
+    screenshot: bool = typer.Option(False, "--screenshot", "-ss" ,  help="Save a screenshot of the of window"),
+): controllers.checkInteractions(headless, screenshot, save_file)
+
+@app.command(name="check-payments", help="Will check state of the current payments")
+def checkMessages(
+    headless: bool = typer.Option(False, "--headless", "-hl", help="Run in headless mode"),
+    save_file: bool = typer.Option(False, "--save_results", "-sr" , help="Save results to file"),
+    screenshot: bool = typer.Option(False, "--screenshot", "-ss" ,  help="Save a screenshot of the of window"),
+    current_payments: bool = typer.Option(False, "--current", "-c" ,  help="Check the state of the current payments"),
+    missing_payments: bool = typer.Option(False, "--missing", "-m" ,  help="Check the state of the missing payments"),
+    refund_payments: bool = typer.Option(False, "--refund", "-r" ,  help="Check the state of the refund payments")
+): controllers.checkPayments(headless, screenshot, save_file, current_payments, missing_payments, refund_payments)
+
 @app.command(name="version", help="Returns GuedesMoney version")
 def getversion(): print(f'GuedesMoney is running version {__version__}')
 
