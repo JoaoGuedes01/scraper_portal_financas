@@ -21,6 +21,13 @@ def checkfiscal(
 ): 
     controllers.checkFiscalSituation(headless, screenshot, save_file)
 
+@app.command(name="check-alerts", help="Will check the current alerts")
+def checkAlerts(
+    headless: bool = typer.Option(False, "--headless", "-hl", help="Run in headless mode"),
+    save_file: bool = typer.Option(False, "--save_results", "-sr" , help="Save results to file"),
+    screenshot: bool = typer.Option(False, "--screenshot", "-ss" ,  help="Save a screenshot of the of window"),
+): controllers.checkAlerts(headless, screenshot, save_file)
+
 @app.command(name="version", help="Returns GuedesMoney version")
 def getversion(): print(f'GuedesMoney is running version {__version__}')
 
