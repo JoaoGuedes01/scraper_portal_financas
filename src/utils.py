@@ -63,12 +63,16 @@ def CheckFiscalSituationText(driver):
         return {"state": 'bad', "literal": situation}
     
 def CheckAlerts(driver):
-    # Clicking on Consultar Alertas
+    # Clicking on Alerts Menu Butoton
     driver.find_element(By.XPATH,'//*[@id="collapseMenu18"]/ul/li[6]').click()
     wait_until_element_is_present(driver, By.ID, 'alertas-table', 10)
+
+    # Fetching alerts table
     alert_table = driver.find_element(By.ID, 'alertas-table')
     rows = alert_table.find_elements(By.TAG_NAME, 'tr')
     del rows[0]
+
+    # Extracting data from table
     alert_rows_obj = []
     for row in rows:
         # Get all columns in each row
