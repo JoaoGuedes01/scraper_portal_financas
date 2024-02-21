@@ -64,8 +64,9 @@ def RunGeneral(
     current_payments: bool = typer.Option(False, "--current", "-c" ,  help="Check the state of the current payments"),
     missing_payments: bool = typer.Option(False, "--missing", "-m" ,  help="Check the state of the missing payments"),
     refund_payments: bool = typer.Option(False, "--refund", "-r" ,  help="Check the state of the refund payments"),
-    send_email: bool = typer.Option(False, "--send-email", "-e" ,  help="Send an email with the results of the run")
-): controllers.RunGeneral(headless, screenshot, save_file, check_fiscal,check_alerts, check_messages, check_interactions, check_payments, current_payments, missing_payments, refund_payments, send_email)
+    send_email: bool = typer.Option(False, "--send-email", "-e" ,  help="Send an email with the results of the run"),
+    attach_screenshots: bool = typer.Option(False, "--attach-screenshots", "-as" ,  help="Attach the screenshots to the email")
+): controllers.RunGeneral(headless, screenshot, save_file, check_fiscal,check_alerts, check_messages, check_interactions, check_payments, current_payments, missing_payments, refund_payments, send_email, attach_screenshots)
 
 @app.command(name="version", help="Returns GuedesMoney version")
 def getversion(): print(f'GuedesMoney is running version {__version__}')
