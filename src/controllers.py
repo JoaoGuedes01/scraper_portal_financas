@@ -1,7 +1,7 @@
 from . import utils
 
-def CLIConfig(user_nif, user_password):
-    utils.ConfigCLI(user_nif, user_password)
+def CLIConfig(user_nif, user_password, sender_email, sender_password, recipient_list, email_type):
+    utils.ConfigCLI(user_nif, user_password, sender_email, sender_password, recipient_list, email_type)
 
 def CheckConfig(show_password):
     utils.CheckConfig(show_password)
@@ -116,8 +116,8 @@ def checkPayments(headless, screenshot, save_file, current_payments, missing_pay
         utils.SaveObjectToFile(payments, 'payments')
     driver.quit()
 
-def RunGeneral(headless, screenshot, save_file, check_fiscal, check_alerts, check_messages, check_interactions, check_payments, current_payments, missing_payments, refund_payments):
-
+def RunGeneral(headless, screenshot, save_file, check_fiscal, check_alerts, check_messages, check_interactions, check_payments, current_payments, missing_payments, refund_payments, send_email):
+    utils.SetupRootFolder()
     if check_payments and not current_payments and not missing_payments and not refund_payments:
         print("Please select a payments option to check (--help for more )")
         return
@@ -194,7 +194,17 @@ def RunGeneral(headless, screenshot, save_file, check_fiscal, check_alerts, chec
     if save_file:
         utils.SaveObjectToFile(data, 'data')
 
+    if send_email:
+        subject = "Finanças Report"
+        body = utils.GenerateEmailBody()
+        utils.SendEmail(subject, body)
+
     # Close Driver
     driver.quit()
     print("GuedesMoney ran successfully")
     return
+
+def SendEmail():
+    subject = "[GUEDESMONEY] - TESTEMAIL"
+    body = utils.GenerateEmailBody()
+    utils.SendEmail(subject, body)

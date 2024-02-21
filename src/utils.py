@@ -7,7 +7,12 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 
+# Email Imports
+import smtplib
+from email.mime.text import MIMEText
 
+
+# Global Variables
 home_dir = os.path.expanduser("~")
 home_dir = os.path.join(home_dir, "GuedesMoney")
 home_dir_screenshot = os.path.join(home_dir, "ScreenShots")
@@ -17,6 +22,11 @@ os.makedirs(home_dir_screenshot, exist_ok=True)
 
 goodFiscalSituation = "Situação Fiscal Regularizada"
 financas_login_page = "https://www.acesso.gov.pt/v2/loginForm?partID=PFAP&path=/geral/dashboard"
+
+
+email_provider_list = {
+   "gmail": "smtp.gmail.com"
+}
 
 # Controller Functions
 
@@ -266,11 +276,15 @@ def CreateDriver(headless):
     driver.set_window_size(1920,1080)
     return driver
 
-def ConfigCLI(user_nif, user_password):
+def ConfigCLI(user_nif, user_password, sender_email, sender_password, recipient_list, email_type):
     try:
         config_obj = {
         "user_nif": user_nif,
-        "user_password": user_password
+        "user_password": user_password,
+        "email_provider": email_type,
+        "sender_email": sender_email,
+        "sender_password": sender_password,
+        "recipient_list": recipient_list
         }
         with open(f'{home_dir}\\config.json', 'w') as outfile:
             json.dump(config_obj, outfile)
@@ -284,9 +298,158 @@ def CheckConfig(show_password):
             data = json.load(f)
         nif = data['user_nif']
         password = data['user_password']
-        
+        sender_email = data['sender_email']
+        sender_password = data['sender_password']
+        recipient_list = data['recipient_list']
+
         print(f'User NIF: {nif}')
         if show_password:
             print(f'User Password: {password}')
+        print(f'Sender Email: {sender_email}')
+        if show_password:
+            print(f'Sender Password: {sender_password}')
+        print(f'Email recipient list: {recipient_list}')
+
+        print('Configuration OK')
     except:
         print("CLI is not configured properly")
+
+def SendEmail(subject, body):
+    with open(f'{home_dir}\\config.json', 'r') as f:
+        data = json.load(f)
+
+    email_provider = email_provider_list[data['email_provider']]
+    sender = data['sender_email']
+    recipients = data['recipient_list']
+    password = data['sender_password']
+
+    print(f'Sending email to {recipients} from {sender} through {email_provider}')
+
+    msg = MIMEText(body, 'html')
+
+    msg['Subject'] = subject
+    msg['From'] = sender
+    msg['To'] = ', '.join(recipients)
+    with smtplib.SMTP_SSL(email_provider, 465) as smtp_server:
+       smtp_server.login(sender, password)
+       smtp_server.sendmail(sender, recipients, msg.as_string())
+    print("Message sent!")
+
+def GenerateEmailBody():
+    with open(f'{home_dir}\\data.json', 'r') as f:
+        data = json.load(f)
+    
+    html = """
+<html>
+<body>
+    """
+
+    if "fiscal_situation" in data:
+        new_html = f"""
+            <div>
+            <b><h1>Fiscal Situation:</h1></b>
+                <div>
+                    State: {data['fiscal_situation']['state']} | {data['fiscal_situation']['literal']}
+                </div>
+            </div>
+        """
+        html = html + new_html
+
+    if "current_alerts" in data:
+        new_html = f"""
+            <div>
+            <b><h1>Current Alerts:</h1></b>
+                {create_html_table(data["current_alerts"]["alerts"])}
+            </div>
+        """
+        html = html + new_html
+    
+    if "current_messages" in data:
+        new_html = f"""
+            <div>
+            <b><h1>Current Messages:</h1></b>
+                {create_simple_list(data["current_messages"]["messages"])}
+            </div>
+        """
+        html = html + new_html
+
+    if "current_interactions" in data:
+        new_html = f"""
+            <div>
+            <b><h1>Current Interactions:</h1></b>
+                {create_html_table(data["current_interactions"]["interactions"])}
+            </div>
+        """
+        html = html + new_html
+
+    if "payments" in data:
+        html += "<b><h1>Payments:</h1></b>"
+        if "current_payments" in data["payments"]:
+            new_html = f"""
+            <div>
+            <b><h3>Current Payments:</h3></b>
+                {create_html_table(data["payments"]["current_payments"]["payments"])}
+            </div>
+        """
+        html = html + new_html
+
+        if "missing_payments" in data["payments"]:
+            new_html = f"""
+            <div>
+            <b><h3>Missing Payments:</h3></b>
+                {create_html_table(data["payments"]["missing_payments"]["payments"])}
+            </div>
+        """
+        html = html + new_html
+
+        if "refund_payments" in data["payments"]:
+            new_html = f"""
+            <div>
+            <b><h3>Refund Payments:</h3></b>
+                {create_html_table(data["payments"]["refund_payments"]["payments"])}
+            </div>
+        """
+        html = html + new_html
+
+    end_of_html = """
+    </body>
+    </html>
+    """
+
+    html = html + end_of_html
+
+    return html
+
+def create_simple_list(data):
+    html = "<div style='font-family: Arial;'>"
+    html += "<ul style='list-style-type: disc; padding-left: 20px;'>"
+    for item in data:
+        html += "<li style='color: #333; font-size: 1.2em; margin-bottom: 10px;'>" + item + "</li>"
+    html += "</ul>"
+    html += "</div>"
+    return html
+
+def create_html_table(data):
+    html = "<table style='border: 1px solid #ddd; border-collapse: collapse; width: 100%;'>\n"
+    # Add table headers
+    html += "<tr style='background-color: #f9f9f9;'>\n"
+    for key in data[0].keys():
+        html += "<th style='border: 1px solid #ddd; padding: 15px; text-align: left; font-size: 1.2em;'>{}</th>\n".format(key)
+    html += "</tr>\n"
+    # Add table data
+    for row in data:
+        html += "<tr>\n"
+        for value in row.values():
+            html += "<td style='border: 1px solid #ddd; padding: 15px; text-align: left; font-size: 1.2em;'>{}</td>\n".format(value)
+        html += "</tr>\n"
+    html += "</table>"
+    return html
+
+def SetupRootFolder():
+    try:
+        data_file_path = os.path.join(home_dir, "data.json")
+        os.remove(data_file_path)
+    except:
+        print("No data file to remove")
+
+
