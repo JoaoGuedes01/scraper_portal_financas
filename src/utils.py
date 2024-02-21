@@ -31,8 +31,9 @@ email_provider_list = {
 # Controller Functions
 
 def LoginWithCredentials(driver):
+    config_file_path = os.path.join(home_dir,"config.json")
     # Loading Configuration to memory
-    with open(f'{home_dir}\\config.json', 'r') as f:
+    with open(config_file_path) as f:
         data = json.load(f)
 
     nif = data['user_nif']
@@ -317,7 +318,8 @@ def CheckConfig(show_password):
         print("CLI is not configured properly")
 
 def SendEmail(subject, body):
-    with open(f'{home_dir}\\config.json', 'r') as f:
+    config_file_path = os.path.join(home_dir,"config.json")
+    with open(config_file_path, 'r') as f:
         data = json.load(f)
 
     email_provider = email_provider_list[data['email_provider']]
@@ -338,7 +340,8 @@ def SendEmail(subject, body):
     print("Message sent!")
 
 def GenerateEmailBody():
-    with open(f'{home_dir}\\data.json', 'r') as f:
+    data_file_path = os.path.join(home_dir,"data.json")
+    with open(data_file_path, 'r') as f:
         data = json.load(f)
     
     html = """
