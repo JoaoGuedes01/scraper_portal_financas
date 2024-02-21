@@ -277,6 +277,7 @@ def CreateDriver(headless):
     return driver
 
 def ConfigCLI(user_nif, user_password, sender_email, sender_password, recipient_list, email_type):
+    config_file_path = os.path.join(home_dir,"config.json")
     try:
         config_obj = {
         "user_nif": user_nif,
@@ -286,15 +287,16 @@ def ConfigCLI(user_nif, user_password, sender_email, sender_password, recipient_
         "sender_password": sender_password,
         "recipient_list": recipient_list
         }
-        with open(f'{home_dir}\\config.json', 'w') as outfile:
+        with open(config_file_path, 'w') as outfile:
             json.dump(config_obj, outfile)
         print("CLI successfully configured")
     except:
         print("There was an error while configuring thje CLI")
 
 def CheckConfig(show_password):
+    config_file_path = os.path.join(home_dir,"config.json")
     try:
-        with open(f'{home_dir}\\config.json', 'r') as f:
+        with open(config_file_path, 'r') as f:
             data = json.load(f)
         nif = data['user_nif']
         password = data['user_password']
