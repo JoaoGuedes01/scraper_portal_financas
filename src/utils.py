@@ -1,3 +1,6 @@
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
 import json
 import os
 from selenium import webdriver
@@ -317,11 +320,16 @@ def CheckConfig(show_password):
     except:
         print("CLI is not configured properly")
 
-def SendEmail(subject, body):
+def SendEmail(subject, body, attach_screenshots):
     config_file_path = os.path.join(home_dir,"config.json")
     with open(config_file_path, 'r') as f:
         data = json.load(f)
 
+    data_file_path = os.path.join(home_dir,"data.json")
+    with open(data_file_path, 'r') as f:
+        results_data = json.load(f)
+
+    screenshot_paths = find_screenshots(results_data)
     email_provider = email_provider_list[data['email_provider']]
     sender = data['sender_email']
     recipients = data['recipient_list']
@@ -329,15 +337,24 @@ def SendEmail(subject, body):
 
     print(f'Sending email to {recipients} from {sender} through {email_provider}')
 
-    msg = MIMEText(body, 'html')
-
+    msg = MIMEMultipart()
     msg['Subject'] = subject
     msg['From'] = sender
     msg['To'] = ', '.join(recipients)
+    msg.attach(MIMEText(body, 'html'))
+
+    for image_path in screenshot_paths:
+        with open(image_path, 'rb') as file:
+            img = MIMEBase('application', 'octet-stream')
+            img.set_payload(file.read())
+        encoders.encode_base64(img)
+        img.add_header('Content-Disposition', f'attachment; filename= {image_path}')
+        msg.attach(img)
+
     with smtplib.SMTP_SSL(email_provider, 465) as smtp_server:
        smtp_server.login(sender, password)
        smtp_server.sendmail(sender, recipients, msg.as_string())
-    print("Message sent!")
+    print("Email sent!")
 
 def GenerateEmailBody():
     data_file_path = os.path.join(home_dir,"data.json")
@@ -457,4 +474,14 @@ def SetupRootFolder():
     except:
         print("No data file to remove")
 
+def find_screenshots(data):
+    if isinstance(data, dict):
+        for key, value in data.items():
+            if key == 'screenshot':
+                yield value
+            else:
+                yield from find_screenshots(value)
+    elif isinstance(data, list):
+        for item in data:
+            yield from find_screenshots(item)
 

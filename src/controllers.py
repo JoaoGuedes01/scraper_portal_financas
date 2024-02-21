@@ -116,7 +116,7 @@ def checkPayments(headless, screenshot, save_file, current_payments, missing_pay
         utils.SaveObjectToFile(payments, 'payments')
     driver.quit()
 
-def RunGeneral(headless, screenshot, save_file, check_fiscal, check_alerts, check_messages, check_interactions, check_payments, current_payments, missing_payments, refund_payments, send_email):
+def RunGeneral(headless, screenshot, save_file, check_fiscal, check_alerts, check_messages, check_interactions, check_payments, current_payments, missing_payments, refund_payments, send_email, attach_screenshots):
     utils.SetupRootFolder()
     if check_payments and not current_payments and not missing_payments and not refund_payments:
         print("Please select a payments option to check (--help for more )")
@@ -197,7 +197,7 @@ def RunGeneral(headless, screenshot, save_file, check_fiscal, check_alerts, chec
     if send_email:
         subject = "Finanças Report"
         body = utils.GenerateEmailBody()
-        utils.SendEmail(subject, body)
+        utils.SendEmail(subject, body, attach_screenshots)
 
     # Close Driver
     driver.quit()
