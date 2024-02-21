@@ -27,7 +27,7 @@ guedesmoney <command> <args> <option>
 |check-payments|headless, save_results, screenshot, current, missing, refund|Will check state of the current payments|
 |config|check_config, show_password|Will prompt user to setup the CLI configuration|
 |login|headless|Will check if login credentials are correct|
-|run|headless, save_results, screenshot,check-fiscal,check-alerts, check-messages, check-interactions, check-payments ,current, missing, refund, send-email|Can run all commands in GuedesMoney (recommended for pipeline integration)|
+|run|headless, save_results, screenshot,check-fiscal,check-alerts, check-messages, check-interactions, check-payments ,current, missing, refund, send-email, attach-screenshots|Can run all commands in GuedesMoney (recommended for pipeline integration)|
 |version|*none*|Returns the current version of guedesmoney|
 
 | Argument |small | Type | Description |
@@ -44,6 +44,7 @@ guedesmoney <command> <args> <option>
 |missing|m|boolean|Check the state of the missing payments|
 |refund|r|boolean|Check the state of the refund payments|
 |send-email|e|boolean|Sends an email with the results of the run|
+|attach-screenshots|as|boolean|Attach the screenshots to the email|
 |check_config|c|boolean|Checks CLI configuration instead of configuring it|
 |show_password|shp|boolean|Show password in CLI configuration check|
 |user_nif|un|text|User NIF|
